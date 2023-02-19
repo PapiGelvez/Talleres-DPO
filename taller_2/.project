@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<projectDescription>
+	<name>taller_2</name>
+	<comment></comment>
+	<projects>
+	</projects>
+	<buildSpec>
+		<buildCommand>
+			<name>org.eclipse.jdt.core.javabuilder</name>
+			<arguments>
+			</arguments>
+		</buildCommand>
+	</buildSpec>
+	<natures>
+		<nature>org.eclipse.jdt.core.javanature</nature>
+	</natures>
+	<linkedResources>
+		<link>
+			<name>Taller0_Olimpicos</name>
+			<type>2</type>
+			<location>C:/Users/santi/OneDrive/Documentos/Universidad/3er semestre/DPO/Taller1/Taller0_Olimpicos</location>
+		</link>
+	</linkedResources>
+</projectDescription>
