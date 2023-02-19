@@ -20,7 +20,7 @@ public class ProductoMenu implements Producto {
 	}
 	public String generarTextoFactura()
 	{
-		String linea = "Precio del producto" + getNombre() + ": " + Integer.toString(getPrecio());
+		String linea = "Precio del producto " + getNombre() + ": " + Integer.toString(getPrecio()) + "\n";
 		return linea;
 	}
 }

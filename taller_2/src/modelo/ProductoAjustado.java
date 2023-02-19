@@ -24,7 +24,7 @@ public class ProductoAjustado implements Producto {
 		for (int i=0; i < lista_ingredientes.size(); i++)
 		{
 			String nombre_ingrediente = lista_ingredientes.get(i).getNombre();
-			if (nombre_ingrediente == ingrediente)
+			if (nombre_ingrediente.equals(ingrediente))
 			{
 				ingredientes_agregados.add(lista_ingredientes.get(i));
 			}
@@ -36,7 +36,7 @@ public class ProductoAjustado implements Producto {
 		for (int i=0; i < lista_ingredientes.size(); i++)
 		{
 			String nombre_ingrediente = lista_ingredientes.get(i).getNombre();
-			if (nombre_ingrediente == ingrediente)
+			if (nombre_ingrediente.equals(ingrediente))
 			{
 				ingredientes_eliminados.add(lista_ingredientes.get(i));
 			}
@@ -59,14 +59,29 @@ public class ProductoAjustado implements Producto {
 			if (!ingredientes_eliminados.isEmpty())
 			{
 				int precio_ingrediente = ingredientes_eliminados.get(i).getCostoAdicional();
-				precio_suma += precio_ingrediente;
+				precio_resta += precio_ingrediente;
 			}
 		}
 		return precio_base + precio_suma - precio_resta;
 	}
 	public String generarTextoFactura()
 	{
-		String linea = "Precio del producto modificado" + getNombre() + ": " + Integer.toString(getPrecio());
+		String linea = "Precio del producto modificado " + getNombre() + ": ";
+		linea += Integer.toString(getPrecio()) + "\n";
+		if (!ingredientes_eliminados.isEmpty())
+		{
+			for (int j = 0; j < ingredientes_eliminados.size(); j++)
+			{
+				linea += "Sin" + ingredientes_eliminados.get(j).getNombre() + " -" +Integer.toString(ingredientes_eliminados.get(j).getCostoAdicional()) + "\n";
+			}
+		}
+		if (!ingredientes_agregados.isEmpty())
+		{
+			for (int j = 0; j < ingredientes_agregados.size(); j++)
+			{
+				linea += "Con" + ingredientes_agregados.get(j).getNombre() + " +" + Integer.toString(ingredientes_agregados.get(j).getCostoAdicional()) + "\n";
+			}
+		}
 		return linea;
 	}
 }

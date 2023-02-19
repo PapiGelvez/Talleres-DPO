@@ -8,7 +8,7 @@ import java.util.ArrayList;
 public class Pedido {
 	private static int numeroPedidos = 0;
 	private int idPedido;
-	private int precio_total;
+	private int precio_total = 0;
 	private String nombreCliente;
 	private String direccionCliente;
 	private ArrayList<Producto> productos_del_pedido = new ArrayList<>();
@@ -34,44 +34,59 @@ public class Pedido {
 	}
 	private int getPrecioNetoPedido()
 	{
-		int precio_neto = (int) (precio_total * 0.81);
+		int precio_final = 0;
+		for (int i = 0; i < getProductosDelPedido().size(); i++)
+		{
+			int precio_ind = getProductosDelPedido().get(i).getPrecio();
+			precio_final += precio_ind;
+		}
+		int precio_neto = (int) (precio_final * 0.81);
 		return precio_neto;
 	}
 	private int getPrecioTotalPedido()
 	{
-		for (int i = 0; i < productos_del_pedido.size(); i++)
+		for (int i = 0; i < getProductosDelPedido().size(); i++)
 		{
-			int precio_ind = productos_del_pedido.get(i).getPrecio();
+			int precio_ind = getProductosDelPedido().get(i).getPrecio();
 			precio_total += precio_ind;
 		}
 		return precio_total;
 	}
 	private int getPrecioIVAPedido()
 	{
-		int precio_iva = (int) (precio_total * 0.19);
+		int precio_final = 0;
+		for (int i = 0; i < getProductosDelPedido().size(); i++)
+		{
+			int precio_ind = getProductosDelPedido().get(i).getPrecio();
+			precio_final += precio_ind;
+		}
+		int precio_iva = (int) (precio_final * 0.19);
 		return precio_iva;
 	}
-	private String generarTextoFactura()
+	private String crearTextoFactura()
 	{
 		String factura_final = "";
-		for (int i = 0; i < productos_del_pedido.size(); i++)
+		factura_final += "ID de factura : " + Integer.toString(getIdPedido()) + "\n";
+		factura_final += "Nombre: " + nombreCliente + "\n";
+		factura_final += "Dirección: " + direccionCliente + "\n";
+		for (int i = 0; i < getProductosDelPedido().size(); i++)
 		{
-			factura_final += productos_del_pedido.get(i).generarTextoFactura();
+			factura_final += getProductosDelPedido().get(i).generarTextoFactura();
 		}
-		factura_final += "Valor neto total: " + Integer.toString(getPrecioNetoPedido());
-		factura_final += "Valor IVA total: " + Integer.toString(getPrecioIVAPedido());
-		factura_final += "Valor total (neto + IVA): " + Integer.toString(getPrecioTotalPedido());
+		factura_final += "Valor neto total: " + Integer.toString(getPrecioNetoPedido()) + "\n";
+		factura_final += "Valor IVA total: " + Integer.toString(getPrecioIVAPedido()) + "\n";
+		factura_final += "Valor total (neto + IVA): " + Integer.toString(getPrecioTotalPedido()) + "\n";
 		return factura_final;
 	}
 	public void guardarFactura(File archivo)
 	{
-		
 		FileWriter escritor;
 		try {
 			escritor = new FileWriter(archivo);
-			escritor.write(generarTextoFactura());
+			escritor.write(crearTextoFactura());
 			escritor.close();
 			System.out.println("Creación exitosa de archivo con factura. Podrá encontrarlo con el id del pedido.");
+			System.out.println("Id de la factura: " + Integer.toString(getIdPedido()));
 		} catch (IOException e) {
 			System.out.println("Ocurrió un error.");
 			e.printStackTrace();

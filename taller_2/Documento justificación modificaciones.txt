@@ -1,0 +1,37 @@
+MODIFICACIONES EN LA IMPLEMENTACIÓN DEL UML:
+
+Clase Aplicacion:
+-Atributos:
+Se agregó un atributo restaurante para poder ser instanciado.
+-Métodos:
+Se volvío static el método mostrarMenu()
+Se agregó un método input() para facilitar la sintaxis de input.
+
+Clase Restaurante:
+-Atributos:
+Se agregaron 5 ArrayList (menú de ingredientes, menú de productos base, menú general, lista de combos y lista de pedidos para consulta).
+-Métodos:
+getPedidoEnCurso() se renombró a agregarAPedidoEnCurso(), ya que su propósito es agregar productos al pedido en curso.
+Se agregó un método getPedidoPorId(), ya que un requerimiento es consultar la informacion de pedidos dado su id.
+Se agregó un método input() para facilitar la sintaxis de input.
+Para los métodos asociados a la carga de datos, se cambiaron los parámetros de File a String.
+
+Clase Pedido:
+-Atributos:
+Se agregó un atributo int precio_total para poder calcular el precio total de un pedido.
+Se agregó un ArrayList<Producto> para indicar que un pedido tiene asociado un conjunto de productos.
+-Métodos:
+Se agregó un método getProductosDelPedido() para no tener que acceder al método privado de lista de productos.
+
+Clase Combo:
+-Atributos:
+Se creó un ArrayList<ProductoBase> para indicar que un combo está conformado por un conjunto de productos base.
+Se creó un precio_final para indicar que cada combo tiene un precio final (con descuento).
+
+Clase ProductoAjustado:
+-Atributos:
+Se añadieron los atributos nombre_producto y precio_base, los cuales se obtienen de un ProductoBase.
+Se agregaron dos ArrayList<Ingrediente>, uno para los ingredientes agregados al producto y otro para los eliminados.
+-Métodos:
+Se crearon dos métodos agregar_ingrediente() y eliminar_ingrediente(), para agregar o eliminar ingredientes del productoAjustado.
+
