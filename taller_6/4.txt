@@ -1,0 +1,9 @@
+ID de factura : 4
+Nombre: pruebaprodajustado
+Dirección: fwqefqwe
+Calorias Totales Pedido: 400
+Precio del producto modificado hawaiana: 22500
+Con piña +2500
+Valor neto total: 18225
+Valor IVA total: 4275
+Valor total (neto + IVA): 22500

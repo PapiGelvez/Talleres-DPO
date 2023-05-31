@@ -1,0 +1,9 @@
+ID de factura : 5
+Nombre: pruebaajusta
+Dirección: fweqfwe
+Calorias Totales Pedido: 200
+Precio del producto modificado corral: 11500
+Sin piña -2500
+Valor neto total: 9315
+Valor IVA total: 2185
+Valor total (neto + IVA): 11500

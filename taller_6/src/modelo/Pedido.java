@@ -34,50 +34,36 @@ public class Pedido {
 	public void agregarProducto(Producto nuevoitem) throws PrecioMaximoException
 	{
 		precio_total += nuevoitem.getPrecio();
-		productos_del_pedido.add(nuevoitem);
+		
+		if (precio_total>=150000) {
+			PrecioMaximoException ex = new PrecioMaximoException(precio_total-nuevoitem.getPrecio());
+			precio_total -= nuevoitem.getPrecio();
+			throw ex;
+		} else {
+			caloriasTotales += nuevoitem.getCalorias();
+			productos_del_pedido.add(nuevoitem);
+		}
 	}
 	public ArrayList<Producto> getProductosDelPedido()
 	{
 		return productos_del_pedido;
 	}
-	private int getPrecioNetoPedido()
+	public int getPrecioNetoPedido()
 	{
-		int precio_final = 0;
-		for (Producto i: productos_del_pedido)
-		{
-			precio_final += i.getPrecio();
-		}
-		int precio_neto = (int) (precio_final * 0.81);
+		int precio_neto = (int) (precio_total * 0.81);
 		return precio_neto;
 	}
-	private int getPrecioTotalPedido()
+	public int getPrecioTotalPedido()
 	{
-		int precio_final = 0;
-		for (int i = 0; i < getProductosDelPedido().size(); i++)
-		{
-			int precio_ind = getProductosDelPedido().get(i).getPrecio();
-			precio_final += precio_ind;
-		}
-		return precio_final;
+		return precio_total;
 	}
-	private int getPrecioIVAPedido()
+	public int getPrecioIVAPedido()
 	{
-		int precio_final = 0;
-		for (int i = 0; i < getProductosDelPedido().size(); i++)
-		{
-			int precio_ind = getProductosDelPedido().get(i).getPrecio();
-			precio_final += precio_ind;
-		}
-		int precio_iva = (int) (precio_final * 0.19);
+		int precio_iva = (int) (precio_total * 0.19);
 		return precio_iva;
 	}
-	private int getCaloriasTotalesPedido()
+	public int getCaloriasTotalesPedido()
 	{
-		for (int i = 0; i < getProductosDelPedido().size(); i++)
-		{
-			int calorias_ind = getProductosDelPedido().get(i).getCalorias();
-			caloriasTotales += calorias_ind;
-		}
 		return caloriasTotales;
 	}
 	private String crearTextoFactura()
@@ -87,9 +73,9 @@ public class Pedido {
 		factura_final += "Nombre: " + nombreCliente + "\n";
 		factura_final += "Dirección: " + direccionCliente + "\n";
 		factura_final += "Calorias Totales Pedido: " + Integer.toString(getCaloriasTotalesPedido()) + "\n";
-		for (int i = 0; i < getProductosDelPedido().size(); i++)
+		for (Producto i: productos_del_pedido)
 		{
-			factura_final += getProductosDelPedido().get(i).generarTextoFactura();
+			factura_final += i.generarTextoFactura();
 		}
 		factura_final += "Valor neto total: " + Integer.toString(getPrecioNetoPedido()) + "\n";
 		factura_final += "Valor IVA total: " + Integer.toString(getPrecioIVAPedido()) + "\n";
@@ -104,16 +90,10 @@ public class Pedido {
 			escritor.write(crearTextoFactura());
 			escritor.close();
 			System.out.println("Creación exitosa de archivo con factura. Podrá encontrarlo con el id del pedido.");
-			System.out.println("Id de la factura: " + Integer.toString(getIdPedido()));
+			System.out.println("\n" + "Id de la factura: " + Integer.toString(getIdPedido()) + "\n");
 		} catch (IOException e) {
 			System.out.println("Ocurrió un error.");
 			e.printStackTrace();
 		}
-	}
-	public int getPrecio_total() {
-		return precio_total;
-	}
-	public void setPrecio_total(int precio_total) {
-		this.precio_total = precio_total;
 	}
 }

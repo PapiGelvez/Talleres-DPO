@@ -10,6 +10,7 @@ import java.util.ArrayList;
 
 import excepciones.HamburguesaException;
 import excepciones.IngredienteRepetidoException;
+import excepciones.PrecioMaximoException;
 import excepciones.ProductoRepetidoException;
 
 public class Restaurante {	
@@ -17,7 +18,7 @@ public class Restaurante {
 	private static ArrayList<Producto> lista_comidas = new ArrayList<>();
 	private static ArrayList<Producto> lista_productos_base = new ArrayList<>();
 	private static ArrayList<Combo> lista_combos = new ArrayList<>();
-	private static ArrayList<Pedido> lista_pedidos = new ArrayList<>();
+	private Pedido pedidoEnCurso;
 	private static ArrayList<Bebida> lista_bebidas = new ArrayList<>();
 	
 	public Restaurante() throws FileNotFoundException, IOException
@@ -32,44 +33,43 @@ public class Restaurante {
 	}
 	public void iniciarPedido(String nombreCliente, String direccionCliente)
 	{
-		Pedido pedido_iniciado = new Pedido(nombreCliente, direccionCliente);
-		lista_pedidos.add(pedido_iniciado);
+		pedidoEnCurso = new Pedido(nombreCliente, direccionCliente);
 	}
 	public void cerrarYGuardarPedido()
 	{
 		File newFile;
 		int indice = 1;
-		Pedido ultimo_pedido = lista_pedidos.get(lista_pedidos.size()-1);
 		//String nombre_archivo = Integer.toString(ultimo_pedido.getIdPedido());
 		while ((newFile = new File(indice + ".txt")).exists()) {
 			indice++;
 		}
-		ultimo_pedido.setIdPedido(indice);
+		pedidoEnCurso.setIdPedido(indice);
 		//String nombre_archivo = Integer.toString(ultimo_pedido.getIdPedido());
 		//File archivo = new File(nombre_archivo + ".txt");
-		ultimo_pedido.guardarFactura(newFile);
+		pedidoEnCurso.guardarFactura(newFile);
+		pedidoEnCurso = null;
 	}
 	public void agregarAPedidoEnCurso()
 	{
 		boolean espedidomodif = false;
-		Pedido ultimo_pedido = lista_pedidos.get(lista_pedidos.size()-1);
-		ArrayList<Producto> productos_del_ultimo_pedido = ultimo_pedido.getProductosDelPedido();
+		//Pedido ultimo_pedido = pedidoEnCurso;
 		System.out.println("Este es tu pedido hasta ahora");
-		if (productos_del_ultimo_pedido.isEmpty())
+		if (pedidoEnCurso.getProductosDelPedido().isEmpty())
 		{
 			System.out.println("0 productos hasta ahora\n");
 		}
-		for (int j = 0; j < productos_del_ultimo_pedido.size(); j++)
+		for (Producto j: pedidoEnCurso.getProductosDelPedido())
 		{
-			System.out.println(productos_del_ultimo_pedido.get(j).getNombre());
+			System.out.println(j.getNombre());
 		}
-		
+		System.out.println("\n");
+		//imprime las opciones del menu
 		for (int i = 0; i < lista_comidas.size(); i++)
 		{
 			System.out.println(Integer.toString(i) + ": " + lista_comidas.get(i).getNombre());
 		}
 		int pedido = Integer.parseInt(input(("Estas son las opciones del menú, seleccione el número asociado: ")));
-		if (lista_comidas.get(pedido) instanceof ProductoMenu)
+		if (lista_comidas.get(pedido) instanceof ProductoMenu) //si no es bebida o combo
 		{
 			int modificar = Integer.parseInt(input("\n¿Desea agregar o quitar ingredientes del producto base?\n1:Sí\n2:No\n"));
 			if (modificar == 1)
@@ -82,9 +82,9 @@ public class Restaurante {
 				{
 					try
 					{
-						int opcion = Integer.parseInt(input("1: Agregar\n2: Eliminar\n3:Finalizar\n"));
+						int opcion = Integer.parseInt(input("1: Agregar\n2: Quitar\n3:Finalizar\n"));
 						if (opcion == 1)
-						{
+						{	//imprime las opciones de ingredientes
 							for (int k = 0; k < lista_ingred.size(); k++)
 							{
 								System.out.println(Integer.toString(k) + ": " + lista_ingred.get(k).getNombre());
@@ -93,17 +93,24 @@ public class Restaurante {
 							producto_modificado.agregar_ingrediente(lista_ingred.get(agregar).getNombre());
 						}
 						else if (opcion == 2)
-						{
+						{	//imprime las opciones de ingredientes
 							for (int l = 0; l < lista_ingred.size(); l++)
 							{
 								System.out.println(Integer.toString(l) + ": " + lista_ingred.get(l).getNombre());
 							}
-							int eliminar = Integer.parseInt(input(("Estos son los ingredientes, seleccione el número asociado del ingrediente que quiere eliminar: ")));
+							int eliminar = Integer.parseInt(input(("Estos son los ingredientes, seleccione el número asociado del ingrediente que quiere quitar: ")));
 							producto_modificado.eliminar_ingrediente(lista_ingred.get(eliminar).getNombre());
 						}
 						else if (opcion == 3)
 						{
-							productos_del_ultimo_pedido.add(producto_modificado);
+							try {
+								pedidoEnCurso.agregarProducto(producto_modificado);
+								System.out.println("\n" + producto_modificado.getNombre() + " se agregó a tu pedido\n");
+							} catch (PrecioMaximoException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+								e.getMessage();
+							}
 							continuar = false;
 						}
 					}
@@ -114,11 +121,17 @@ public class Restaurante {
 				}
 			}
 		}
-		if (espedidomodif == false)
+		if (espedidomodif == false)  //si es bebida o combo, agrega de una
 		{
-			productos_del_ultimo_pedido.add(lista_comidas.get(pedido));
+			try {
+				pedidoEnCurso.agregarProducto(lista_comidas.get(pedido));
+				System.out.println("\n" + lista_comidas.get(pedido).getNombre() + " se agregó a tu pedido\n");
+			} catch (PrecioMaximoException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				e.getMessage();
+			}
 		}
-		System.out.println(lista_comidas.get(pedido).getNombre() + " se agregó a tu pedido\n");
 	}
 	public void getPedidoPorId(int id) throws IndexOutOfBoundsException
 	{
@@ -263,7 +276,6 @@ public class Restaurante {
 					String nombre_base = j.getNombre();
 					if (nombre_base.equals(partes[i]))
 						{
-							System.out.println(j.getNombre());
 							combo.agregarItemACombo(j);
 							break;
 						}
@@ -274,11 +286,6 @@ public class Restaurante {
 			linea = br.readLine();
 		}	
 		br.close();
-		for (Producto x: lista_combos)
-		{
-			System.out.println(x.getPrecio());
-			System.out.println(x.getCalorias());
-		}
 	}
 	private static void cargarBebidas(String archivoBebidas) throws FileNotFoundException, IOException, ProductoRepetidoException
 	{

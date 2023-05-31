@@ -6,7 +6,7 @@ public class Combo implements Producto {
 	private double descuento;
 	private String nombreCombo;
 	private ArrayList<Producto> elementos_del_combo = new ArrayList<>();
-	int precio_final  = 0;
+	int precio_suma  = 0;
 	int calorias = 0;
 	
 	public Combo(String nombre, double descuento)
@@ -19,7 +19,7 @@ public class Combo implements Producto {
 	{
 		elementos_del_combo.add(itemCombo);
 		calorias += itemCombo.getCalorias();
-		precio_final += itemCombo.getPrecio();
+		precio_suma += itemCombo.getPrecio();
 	}
 	public String getNombre()
 	{
@@ -27,8 +27,8 @@ public class Combo implements Producto {
 	}
 	public int getPrecio()
 	{	
-		precio_final = (int) (precio_final * (1-descuento/100));
-		return precio_final;
+		int precio_descuento = (int) (precio_suma * (1-descuento/100));
+		return precio_descuento;
 	}
 	public int getCalorias()
 	{

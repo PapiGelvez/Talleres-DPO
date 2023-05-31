@@ -1,0 +1,11 @@
+ID de factura : 1
+Nombre: gloton
+Dirección: 3232
+Calorias Totales Pedido: 3600
+Precio del combo especial: 32084
+Precio del combo especial: 32084
+Precio del combo especial: 32084
+Precio del combo especial: 32084
+Valor neto total: 129940
+Valor IVA total: 30479
+Valor total (neto + IVA): 160420

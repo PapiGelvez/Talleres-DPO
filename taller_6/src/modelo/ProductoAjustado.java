@@ -9,6 +9,8 @@ public class ProductoAjustado implements Producto {
 	private ArrayList<Ingrediente> ingredientes_agregados = new ArrayList<>();
 	private int precio_base;
 	private int calorias_base;
+	private int precio_final;
+	private int calorias_final;
 	
 	public ProductoAjustado(ProductoMenu base)
 	{
@@ -29,6 +31,7 @@ public class ProductoAjustado implements Producto {
 			if (nombre_ingrediente.equals(ingrediente))
 			{
 				ingredientes_agregados.add(lista_ingredientes.get(i));
+				break;
 			}
 		}
 	}
@@ -64,7 +67,8 @@ public class ProductoAjustado implements Producto {
 				precio_resta += precio_ingrediente;
 			}
 		}
-		return precio_base + precio_suma - precio_resta;
+		precio_final = precio_base + precio_suma - precio_resta;
+		return precio_final;
 	}
 	public int getCalorias()
 	{
@@ -86,7 +90,8 @@ public class ProductoAjustado implements Producto {
 				calorias_resta += calorias;
 			}
 		}
-		return calorias_base + calorias_suma - calorias_resta;
+		calorias_final = calorias_base + calorias_suma - calorias_resta;
+		return calorias_final;
 	}
 	public String generarTextoFactura()
 	{
